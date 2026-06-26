@@ -154,7 +154,15 @@
       font-size: 14px; font-weight: 500; cursor: pointer;
       transition: border-color 0.15s, color 0.15s;
     }
-    .btn-again:hover { border-color: var(--border-focus); color: var(--text); }
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      color: rgba(255,255,255,0.25);
+      font-size: 11px;
+      line-height: 1.8;
+      letter-spacing: 0.2px;
+    }
+    .footer a { color: inherit; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -211,6 +219,11 @@
       <button class="btn-again" onclick="resetToReady()">확인</button>
     </div>
   </div>
+</div>
+
+<div class="footer">
+  <div>수집 항목(이름·차량번호·연락처)은 주차 할인·정산 목적으로만 사용되며 예배 종료 후 즉시 폐기됩니다.</div>
+  <div style="margin-top:6px;">© 2025 Joyful Church · NOW예배 &nbsp;|&nbsp; Made by 정현호</div>
 </div>
 
 <script>
