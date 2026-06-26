@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Joyful NOW 주차등록</title>
+  <title>Joyful NOW 주차할인&정산 등록</title>
   <style>
     :root {
       --bg: #f5f6fa;
@@ -37,14 +37,12 @@
 
     /* 헤더 */
     .header { text-align: center; margin-bottom: 24px; }
-    .header-icon {
-      width: 56px; height: 56px;
-      background: var(--primary);
-      border-radius: 16px;
-      display: inline-flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
+    .header-logo {
+      width: 180px;
+      margin: 0 auto 16px;
+      display: block;
+      border-radius: 12px;
     }
-    .header-icon svg { width: 28px; height: 28px; }
     .header h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
     .header p { margin-top: 4px; font-size: 14px; color: var(--muted); }
 
@@ -84,7 +82,7 @@
 
     /* 폼 필드 */
     .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.2px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text) !important; margin-bottom: 6px; letter-spacing: -0.2px; }
     .field label .req { color: var(--accent); margin-left: 2px; }
     .field input {
       width: 100%; height: 48px; padding: 0 14px;
@@ -101,11 +99,14 @@
     .field select {
       width: 100%; height: 48px; padding: 0 36px 0 14px;
       border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; color: var(--text);
+      font-size: 15px; color: #b0b4bc;
       background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
       appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
+    .field select.selected { color: var(--text); }
+    .field select option { color: var(--text); }
+    .field select option[value=""] { color: #b0b4bc; }
     .field select:focus { border-color: var(--accent); background-color: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
     .field select.error { border-color: #ef4444; background-color: #fff5f5; }
 
@@ -180,13 +181,8 @@
 <body>
 <div class="wrap">
   <div class="header">
-    <div class="header-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M9 8h4a2 2 0 0 1 0 4H9v4"/><path d="M9 12h4"/>
-      </svg>
-    </div>
-    <h1>Joyful NOW 주차등록</h1>
+    <img src="logo.png" alt="Joyful NOW" class="header-logo" />
+    <h1>주차할인&정산 등록</h1>
     <p>정보를 입력하고 등록 버튼을 눌러주세요</p>
   </div>
 
@@ -214,9 +210,9 @@
       <div class="field">
         <label>차량번호 <span class="req">*</span></label>
         <input type="text" id="carNum" placeholder="12가 3456" maxlength="15" />
-        <div class="hint">예: 12가 3456, 서울12가3456</div>
-        <span class="chip-label">차량 유형 (해당 시 선택)</span>
+        <span class="chip-label">차량 유형 (선택사항)</span>
         <div class="chip-group" id="car-type-chips">
+          <div class="chip" data-value="해당없음" onclick="toggleChip(this)">해당없음</div>
           <div class="chip" data-value="전기차" onclick="toggleChip(this)">⚡ 전기차</div>
           <div class="chip" data-value="하이브리드" onclick="toggleChip(this)">🌿 하이브리드</div>
           <div class="chip" data-value="경차" onclick="toggleChip(this)">🚗 경차</div>
@@ -281,6 +277,13 @@
     else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
   });
 
+  // 부서 선택 색상
+  const deptEl = document.getElementById('dept');
+  function updateDeptColor() {
+    deptEl.classList.toggle('selected', !!deptEl.value);
+  }
+  deptEl.addEventListener('change', updateDeptColor);
+
   let selectedCarType = '';
   let isEditMode = false;   // 프로필 수정 중 여부
   let savedProfile = null;  // 저장된 프로필
@@ -318,10 +321,11 @@
     document.getElementById('phone').readOnly = true;
     document.getElementById('dept').value = savedProfile.dept;
     document.getElementById('dept').disabled = true;
+    updateDeptColor();
 
-    // 차량번호는 매번 입력 (매일 달라질 수 있으니 편집 가능하게)
-    document.getElementById('carNum').value = '';
-    document.getElementById('carNum').readOnly = false;
+    // 차량번호 복원
+    document.getElementById('carNum').value = savedProfile.carNum || '';
+    document.getElementById('carNum').readOnly = true;
 
     // 칩 복원
     if (savedProfile.carType) {
@@ -347,13 +351,14 @@
     });
     document.getElementById('dept').disabled = false;
     document.getElementById('dept').value = '';
+    updateDeptColor();
   }
 
   // ── 정보 수정 모드 진입 ──
   function enterEditMode() {
     isEditMode = true;
     // 배너 유지하되 폼 편집 가능하게
-    ['name','phone'].forEach(id => {
+    ['name','phone','carNum'].forEach(id => {
       document.getElementById(id).readOnly = false;
     });
     document.getElementById('dept').disabled = false;
@@ -411,7 +416,7 @@
 
     // 내 정보 저장
     if (saveCb) {
-      const profile = { name, phone, dept, carType: selectedCarType };
+      const profile = { name, phone, dept, carNum, carType: selectedCarType };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
       savedProfile = profile;
     }
