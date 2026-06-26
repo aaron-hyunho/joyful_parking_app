@@ -6,136 +6,155 @@
   <title>Joyful NOW 주차할인&정산 등록</title>
   <style>
     :root {
-      --bg: #f5f6fa;
-      --card: #ffffff;
-      --primary: #1a1a2e;
-      --accent: #4f46e5;
-      --accent-light: #eef2ff;
-      --text: #1e1e2e;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --success-bg: #ecfdf5;
-      --success-text: #065f46;
-      --success-border: #6ee7b7;
-      --error-bg: #fef2f2;
-      --error-text: #991b1b;
-      --radius: 12px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --card2: #222222;
+      --accent: #ffffff;
+      --accent-dim: rgba(255,255,255,0.08);
+      --accent-focus: rgba(255,255,255,0.15);
+      --text: #ffffff;
+      --muted: #888888;
+      --border: #2e2e2e;
+      --border-focus: #555555;
+      --success-bg: #0d2818;
+      --success-text: #4ade80;
+      --success-border: #166534;
+      --error-bg: #2a0a0a;
+      --error-text: #f87171;
+      --error-border: #7f1d1d;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
-      background: var(--bg);
+      background: #0f0f0f url('bg.png') center center / cover no-repeat fixed;
       min-height: 100dvh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 24px 16px;
+      padding: 32px 20px;
     }
-    .wrap { width: 100%; max-width: 420px; }
+    .wrap { width: 100%; max-width: 400px; }
 
     /* 헤더 */
-    .header { text-align: center; margin-bottom: 20px; }
-    .header-logo { width: 160px; margin: 0 auto 14px; display: block; }
-    .header h1 { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
-    .header p { margin-top: 4px; font-size: 14px; color: var(--muted); }
-
-    /* 날짜 */
-    .date-badge { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-    .date-badge span { background: var(--card); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
-
-    /* 카드 */
-    .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px 22px; }
-
-    /* 폼 필드 */
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.2px; }
-    .field label .req { color: var(--accent); margin-left: 2px; }
-    .field input {
-      width: 100%; height: 48px; padding: 0 14px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; color: var(--text); background: #fafafa;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-      outline: none; -webkit-appearance: none;
+    .header { text-align: center; margin-bottom: 32px; }
+    .header-logo { width: 140px; margin: 0 auto 20px; display: block; }
+    .header h1 {
+      font-size: 17px; font-weight: 600; color: var(--text);
+      letter-spacing: -0.3px; margin-bottom: 4px;
     }
-    .field input::placeholder { color: #b0b4bc; }
-    .field input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
-    .field input.error { border-color: #ef4444; background: #fff5f5; }
+    .header-date {
+      font-size: 13px; color: var(--muted); letter-spacing: 0.2px;
+    }
+
+    /* 폼 카드 */
+    .card {
+      background: rgba(20, 20, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 24px;
+    }
+
+    /* 필드 */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 500;
+      color: var(--muted); margin-bottom: 6px; letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .field input, .field select {
+      width: 100%; height: 48px; padding: 0 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      font-size: 15px; color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      -webkit-appearance: none;
+    }
+    .field input::placeholder { color: #555; }
+    .field input:focus, .field select:focus {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.08);
+    }
+    .field input.error { border-color: #7f1d1d; background: rgba(127,29,29,0.2); }
     .field select {
-      width: 100%; height: 48px; padding: 0 36px 0 14px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 15px; color: #b0b4bc;
-      background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
-      appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+      cursor: pointer;
+      color: #444;
     }
     .field select.selected { color: var(--text); }
-    .field select option { color: var(--text); }
-    .field select option[value=""] { color: #b0b4bc; }
-    .field select:focus { border-color: var(--accent); background-color: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
-    .field select.error { border-color: #ef4444; background-color: #fff5f5; }
+    .field select option { color: #111; background: #fff; }
+    .field select.error { border-color: #7f1d1d; }
 
-    /* 내 정보 저장 체크 */
-    .save-check {
-      display: flex; align-items: center; gap: 8px;
-      margin-top: 4px; margin-bottom: 16px;
-      padding: 10px 12px;
-      background: #fafafa; border-radius: 8px; border: 1px solid var(--border);
-      cursor: pointer; user-select: none;
-    }
-    .save-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
-    .save-check span { font-size: 13px; color: var(--text); font-weight: 500; }
-    .save-check small { font-size: 11px; color: var(--muted); margin-left: auto; }
+    /* 구분선 */
+    .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 20px 0; }
 
-    /* 저장된 정보 수정 링크 */
-    .edit-link {
-      text-align: center; margin-top: 12px; margin-bottom: 4px;
-    }
-    .edit-link button {
-      background: none; border: none; font-size: 13px; color: var(--muted);
-      cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
-      padding: 4px 8px;
-    }
-    .edit-link button:hover { color: var(--accent); }
-
-    /* 버튼 */
+    /* 등록 버튼 */
     .btn {
-      width: 100%; height: 52px; background: var(--primary); color: #fff;
-      border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      gap: 8px; transition: background 0.15s, transform 0.1s; letter-spacing: -0.3px;
+      width: 100%; height: 52px;
+      background: #ffffff; color: #0f0f0f;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: -0.2px;
     }
-    .btn:hover { background: #2d2d4e; }
+    .btn:hover { opacity: 0.88; }
     .btn:active { transform: scale(0.98); }
-    .btn:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
     .btn .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2); border-top-color: #000;
       border-radius: 50%; animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* 에러 메시지 */
-    .result { display: none; border-radius: 10px; padding: 14px 16px; margin-top: 14px; font-size: 14px; font-weight: 500; line-height: 1.5; }
-    .result.error { display: block; background: var(--error-bg); color: var(--error-text); border: 1px solid #fca5a5; }
+    /* 에러/결과 */
+    .result {
+      display: none; border-radius: 8px; padding: 12px 14px;
+      margin-top: 12px; font-size: 13px; font-weight: 500; line-height: 1.5;
+    }
+    .result.error {
+      display: block;
+      background: var(--error-bg); color: var(--error-text);
+      border: 1px solid var(--error-border);
+    }
 
     /* 성공 화면 */
-    .success-screen { display: none; text-align: center; padding: 8px 0; }
+    .success-screen { display: none; text-align: center; }
     .success-screen.show { display: block; }
-    .success-screen .check {
-      width: 64px; height: 64px; background: #ecfdf5; border-radius: 50%;
+    .success-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #0d2818; border: 1px solid #166534;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 16px; font-size: 30px;
+      margin: 0 auto 16px; font-size: 24px;
     }
-    .success-screen h2 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-    .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-    .info-box { background: var(--bg); border-radius: 10px; padding: 14px 16px; margin: 16px 0; text-align: left; }
-    .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: var(--text); }
-    .info-row span:first-child { color: var(--muted); }
+    .success-screen h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .success-screen p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .info-box {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 4px 0; margin-bottom: 20px; text-align: left;
+    }
+    .info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 16px; font-size: 13px; color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--muted); font-size: 12px; }
+    .info-row span:last-child { font-weight: 500; }
     .btn-again {
-      width: 100%; height: 48px; background: var(--accent-light); color: var(--accent);
-      border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
-      cursor: pointer; transition: background 0.15s;
+      width: 100%; height: 48px;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
     }
-    .btn-again:hover { background: #e0e7ff; }
+    .btn-again:hover { border-color: var(--border-focus); color: var(--text); }
   </style>
 </head>
 <body>
@@ -143,30 +162,27 @@
   <div class="header">
     <img src="logo.png" alt="Joyful NOW" class="header-logo" />
     <h1>주차할인&amp;정산 등록</h1>
-    <p>정보를 입력하고 등록 버튼을 눌러주세요</p>
+    <div class="header-date" id="today-date"></div>
   </div>
 
-  <div class="date-badge"><span id="today-date"></span></div>
-
   <div class="card">
-    <!-- 폼 -->
     <div id="form-section">
       <div class="field">
-        <label>이름 <span class="req">*</span></label>
+        <label>이름</label>
         <input type="text" id="name" placeholder="홍길동" maxlength="20" />
       </div>
       <div class="field">
-        <label>차량번호 <span class="req">*</span></label>
+        <label>차량번호</label>
         <input type="text" id="carNum" placeholder="12가 3456" maxlength="15" />
       </div>
       <div class="field">
-        <label>연락처 <span class="req">*</span></label>
+        <label>연락처</label>
         <input type="tel" id="phone" placeholder="010-0000-0000" maxlength="13" />
       </div>
       <div class="field">
-        <label>부서 <span class="req">*</span></label>
+        <label>부서</label>
         <select id="dept">
-          <option value="">부서를 선택해주세요</option>
+          <option value="">선택해주세요</option>
           <option value="청년부">청년부</option>
           <option value="신혼부부">신혼부부</option>
           <option value="장년부">장년부</option>
@@ -175,18 +191,20 @@
         </select>
       </div>
 
+      <div class="divider"></div>
+
       <button class="btn" id="submit-btn" onclick="submitForm()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
-        주차 등록하기
+        등록하기
       </button>
       <div class="result" id="result-msg"></div>
     </div>
 
     <!-- 성공 화면 -->
     <div class="success-screen" id="success-screen">
-      <div class="check">✅</div>
+      <div class="success-icon">✅</div>
       <h2>등록 완료!</h2>
       <p>주차 정보가 성공적으로 등록되었습니다</p>
       <div class="info-box" id="confirm-info"></div>
@@ -199,11 +217,9 @@
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybRS45LtWiG1LIzPIowjtsXvyCGoCfWkcct-7HQXRAabFIjJfgwq4cNYLh3PA4PQ/exec';
   const STORAGE_KEY = 'joyfulnow_profile';
 
-  // 날짜
   document.getElementById('today-date').textContent =
     new Date().toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
 
-  // 전화번호 자동 하이픈
   document.getElementById('phone').addEventListener('input', function () {
     let v = this.value.replace(/\D/g, '');
     if (v.length <= 3) this.value = v;
@@ -211,58 +227,46 @@
     else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
   });
 
-  // 부서 색상
   const deptEl = document.getElementById('dept');
-  function updateDeptColor() {
+  deptEl.addEventListener('change', () => {
     deptEl.classList.toggle('selected', !!deptEl.value);
-  }
-  deptEl.addEventListener('change', updateDeptColor);
+  });
 
   let savedProfile = null;
 
-  // ── 초기화 ──
   function init() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) savedProfile = JSON.parse(raw);
-    } catch(e) { savedProfile = null; }
-
+    } catch(e) {}
     if (savedProfile) fillForm(savedProfile);
   }
 
-  // ── 폼에 저장된 정보 채우기 ──
-  function fillForm(profile) {
-    document.getElementById('name').value = profile.name || '';
-    document.getElementById('carNum').value = profile.carNum || '';
-    document.getElementById('phone').value = profile.phone || '';
-    document.getElementById('dept').value = profile.dept || '';
-    updateDeptColor();
-
-    // 칩 복원
-    selectedCarType = '';
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  function fillForm(p) {
+    document.getElementById('name').value = p.name || '';
+    document.getElementById('carNum').value = p.carNum || '';
+    document.getElementById('phone').value = p.phone || '';
+    deptEl.value = p.dept || '';
+    deptEl.classList.toggle('selected', !!p.dept);
   }
 
-  // ── 유효성 검사 ──
   function validateForm() {
     let valid = true;
     ['name','carNum','phone'].forEach(id => {
       const el = document.getElementById(id);
-      if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-      else { el.classList.remove('error'); }
+      el.classList.toggle('error', !el.value.trim());
+      if (!el.value.trim()) valid = false;
     });
-    if (!deptEl.value) { deptEl.classList.add('error'); valid = false; }
-    else { deptEl.classList.remove('error'); }
+    deptEl.classList.toggle('error', !deptEl.value);
+    if (!deptEl.value) valid = false;
     return valid;
   }
 
-  // ── 제출 ──
   async function submitForm() {
     if (!validateForm()) {
       const el = document.getElementById('result-msg');
       el.className = 'result error';
-      el.style.cssText = '';
-      el.innerHTML = '⚠️ 모든 항목을 입력해주세요.';
+      el.innerHTML = '모든 항목을 입력해주세요.';
       return;
     }
 
@@ -271,35 +275,31 @@
     const phone  = document.getElementById('phone').value.trim();
     const dept   = deptEl.value;
 
-    const profile = { name, phone, dept, carNum };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-    savedProfile = profile;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ name, carNum, phone, dept }));
+    savedProfile = { name, carNum, phone, dept };
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> 등록 중...';
 
-    const payload = { name, carNum, phone, dept };
-
     try {
       const res = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ name, carNum, phone, dept }),
       });
       const json = await res.json();
       if (json.result === 'success') {
-        showSuccess(payload);
+        showSuccess({ name, carNum, phone, dept });
       } else {
         throw new Error(json.message || '서버 오류');
       }
     } catch (err) {
       const el = document.getElementById('result-msg');
       el.className = 'result error';
-      el.style.cssText = '';
-      el.innerHTML = `❌ 등록 실패: ${err.message}<br>잠시 후 다시 시도해주세요.`;
+      el.innerHTML = `등록 실패: ${err.message}<br>잠시 후 다시 시도해주세요.`;
       btn.disabled = false;
-      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 주차 등록하기`;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 등록하기`;
     }
   }
 
@@ -320,10 +320,9 @@
     document.getElementById('success-screen').classList.remove('show');
     document.getElementById('form-section').style.display = 'block';
     document.getElementById('result-msg').className = 'result';
-    document.getElementById('result-msg').style.cssText = '';
     const btn = document.getElementById('submit-btn');
     btn.disabled = false;
-    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 주차 등록하기`;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 등록하기`;
     init();
   }
 
