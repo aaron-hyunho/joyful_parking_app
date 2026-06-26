@@ -73,17 +73,6 @@
     .field select:focus { border-color: var(--accent); background-color: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
     .field select.error { border-color: #ef4444; background-color: #fff5f5; }
 
-    /* 차량 유형 칩 */
-    .chip-label { font-size: 12px; color: var(--muted); margin-top: 10px; margin-bottom: 6px; display: block; }
-    .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip {
-      padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
-      background: #fafafa; font-size: 13px; font-weight: 500; color: var(--muted);
-      cursor: pointer; transition: all 0.15s; user-select: none;
-    }
-    .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-    .chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
-
     /* 내 정보 저장 체크 */
     .save-check {
       display: flex; align-items: center; gap: 8px;
@@ -169,13 +158,6 @@
       <div class="field">
         <label>차량번호 <span class="req">*</span></label>
         <input type="text" id="carNum" placeholder="12가 3456" maxlength="15" />
-        <span class="chip-label">차량 유형 (선택사항)</span>
-        <div class="chip-group" id="car-type-chips">
-          <div class="chip" data-value="해당없음" onclick="toggleChip(this)">해당없음</div>
-          <div class="chip" data-value="전기차" onclick="toggleChip(this)">⚡ 전기차</div>
-          <div class="chip" data-value="하이브리드" onclick="toggleChip(this)">🌿 하이브리드</div>
-          <div class="chip" data-value="경차" onclick="toggleChip(this)">🚗 경차</div>
-        </div>
       </div>
       <div class="field">
         <label>연락처 <span class="req">*</span></label>
@@ -236,7 +218,6 @@
   }
   deptEl.addEventListener('change', updateDeptColor);
 
-  let selectedCarType = '';
   let savedProfile = null;
 
   // ── 초기화 ──
@@ -258,22 +239,8 @@
     updateDeptColor();
 
     // 칩 복원
-    selectedCarType = profile.carType || '';
-    document.querySelectorAll('#car-type-chips .chip').forEach(c => {
-      c.classList.toggle('active', c.dataset.value === selectedCarType);
-    });
-  }
-
-  // ── 칩 토글 ──
-  function toggleChip(el) {
-    if (el.classList.contains('active')) {
-      el.classList.remove('active');
-      selectedCarType = '';
-    } else {
-      document.querySelectorAll('#car-type-chips .chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      selectedCarType = el.dataset.value;
-    }
+    selectedCarType = '';
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   }
 
   // ── 유효성 검사 ──
@@ -304,8 +271,7 @@
     const phone  = document.getElementById('phone').value.trim();
     const dept   = deptEl.value;
 
-    // 항상 자동 저장
-    const profile = { name, phone, dept, carNum, carType: selectedCarType };
+    const profile = { name, phone, dept, carNum };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
     savedProfile = profile;
 
@@ -313,12 +279,7 @@
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> 등록 중...';
 
-    const payload = {
-      name,
-      carNum: carNum + (selectedCarType ? ` (${selectedCarType})` : ''),
-      phone,
-      dept,
-    };
+    const payload = { name, carNum, phone, dept };
 
     try {
       const res = await fetch(APPS_SCRIPT_URL, {
