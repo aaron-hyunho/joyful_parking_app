@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Joyful NOW 주차등록</title>
+  <style>
+    :root {
+      --bg: #f5f6fa;
+      --card: #ffffff;
+      --primary: #1a1a2e;
+      --accent: #4f46e5;
+      --accent-light: #eef2ff;
+      --text: #1e1e2e;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --success-border: #6ee7b7;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      background: var(--bg);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .wrap { width: 100%; max-width: 420px; }
+
+    /* 헤더 */
+    .header { text-align: center; margin-bottom: 24px; }
+    .header-icon {
+      width: 56px; height: 56px;
+      background: var(--primary);
+      border-radius: 16px;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .header-icon svg { width: 28px; height: 28px; }
+    .header h1 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+    .header p { margin-top: 4px; font-size: 14px; color: var(--muted); }
+
+    /* 날짜 */
+    .date-badge { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+    .date-badge span { background: var(--card); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+
+    /* 카드 */
+    .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px 22px; }
+
+    /* 저장 프로필 배너 */
+    .profile-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--accent-light);
+      border: 1.5px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+    }
+    .profile-banner-left { display: flex; align-items: center; gap: 10px; }
+    .profile-avatar {
+      width: 36px; height: 36px;
+      background: var(--accent); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #fff; font-weight: 700; flex-shrink: 0;
+    }
+    .profile-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .profile-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .btn-edit-profile {
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      background: none; border: 1px solid #c7d2fe;
+      border-radius: 8px; padding: 5px 10px; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .btn-edit-profile:hover { background: #e0e7ff; }
+
+    /* 폼 필드 */
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; letter-spacing: -0.2px; }
+    .field label .req { color: var(--accent); margin-left: 2px; }
+    .field input {
+      width: 100%; height: 48px; padding: 0 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 15px; color: var(--text); background: #fafafa;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+      outline: none; -webkit-appearance: none;
+    }
+    .field input::placeholder { color: #b0b4bc; }
+    .field input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+    .field input.error { border-color: #ef4444; background: #fff5f5; }
+    .field input[readonly] { background: #f3f4f6; color: var(--muted); cursor: default; }
+    .field .hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+    .field select {
+      width: 100%; height: 48px; padding: 0 36px 0 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 15px; color: var(--text);
+      background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+      appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field select:focus { border-color: var(--accent); background-color: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+    .field select.error { border-color: #ef4444; background-color: #fff5f5; }
+
+    /* 차량 유형 칩 */
+    .chip-label { font-size: 12px; color: var(--muted); margin-top: 10px; margin-bottom: 6px; display: block; }
+    .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: #fafafa; font-size: 13px; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+    .chip.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+    /* 내 정보 저장 체크 */
+    .save-check {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 4px; margin-bottom: 16px;
+      padding: 10px 12px;
+      background: #fafafa; border-radius: 8px; border: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+    }
+    .save-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .save-check span { font-size: 13px; color: var(--text); font-weight: 500; }
+    .save-check small { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    /* 버튼 */
+    .btn {
+      width: 100%; height: 52px; background: var(--primary); color: #fff;
+      border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: background 0.15s, transform 0.1s; letter-spacing: -0.3px;
+    }
+    .btn:hover { background: #2d2d4e; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+    .btn .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 에러 메시지 */
+    .result { display: none; border-radius: 10px; padding: 14px 16px; margin-top: 14px; font-size: 14px; font-weight: 500; line-height: 1.5; }
+    .result.error { display: block; background: var(--error-bg); color: var(--error-text); border: 1px solid #fca5a5; }
+
+    /* 성공 화면 */
+    .success-screen { display: none; text-align: center; padding: 8px 0; }
+    .success-screen.show { display: block; }
+    .success-screen .check {
+      width: 64px; height: 64px; background: #ecfdf5; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 30px;
+    }
+    .success-screen h2 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .info-box { background: var(--bg); border-radius: 10px; padding: 14px 16px; margin: 16px 0; text-align: left; }
+    .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: var(--text); }
+    .info-row span:first-child { color: var(--muted); }
+    .btn-again {
+      width: 100%; height: 48px; background: var(--accent-light); color: var(--accent);
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-again:hover { background: #e0e7ff; }
+
+    /* 구분선 */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9 8h4a2 2 0 0 1 0 4H9v4"/><path d="M9 12h4"/>
+      </svg>
+    </div>
+    <h1>Joyful NOW 주차등록</h1>
+    <p>정보를 입력하고 등록 버튼을 눌러주세요</p>
+  </div>
+
+  <div class="date-badge"><span id="today-date"></span></div>
+
+  <div class="card">
+    <!-- 저장 프로필 배너 (저장된 정보 있을 때만 표시) -->
+    <div class="profile-banner" id="profile-banner" style="display:none">
+      <div class="profile-banner-left">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div>
+          <div class="profile-name" id="profile-name-label"></div>
+          <div class="profile-sub" id="profile-sub-label"></div>
+        </div>
+      </div>
+      <button class="btn-edit-profile" onclick="enterEditMode()">정보 수정</button>
+    </div>
+
+    <!-- 폼 -->
+    <div id="form-section">
+      <div class="field">
+        <label>이름 <span class="req">*</span></label>
+        <input type="text" id="name" placeholder="홍길동" maxlength="20" />
+      </div>
+      <div class="field">
+        <label>차량번호 <span class="req">*</span></label>
+        <input type="text" id="carNum" placeholder="12가 3456" maxlength="15" />
+        <div class="hint">예: 12가 3456, 서울12가3456</div>
+        <span class="chip-label">차량 유형 (해당 시 선택)</span>
+        <div class="chip-group" id="car-type-chips">
+          <div class="chip" data-value="전기차" onclick="toggleChip(this)">⚡ 전기차</div>
+          <div class="chip" data-value="하이브리드" onclick="toggleChip(this)">🌿 하이브리드</div>
+          <div class="chip" data-value="경차" onclick="toggleChip(this)">🚗 경차</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>연락처 <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="010-0000-0000" maxlength="13" />
+      </div>
+      <div class="field">
+        <label>부서 <span class="req">*</span></label>
+        <select id="dept">
+          <option value="">부서를 선택해주세요</option>
+          <option value="청년부">청년부</option>
+          <option value="신혼부부">신혼부부</option>
+          <option value="장년부">장년부</option>
+          <option value="사역자">사역자</option>
+          <option value="타교인">타교인</option>
+        </select>
+      </div>
+
+      <!-- 내 정보 저장 체크박스 (저장 안 된 상태에서만 표시) -->
+      <label class="save-check" id="save-check-row">
+        <input type="checkbox" id="save-profile-cb" checked />
+        <span>내 정보 저장하기</span>
+        <small>이 기기에만 저장</small>
+      </label>
+
+      <button class="btn" id="submit-btn" onclick="submitForm()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        주차 등록하기
+      </button>
+      <div class="result" id="result-msg"></div>
+    </div>
+
+    <!-- 성공 화면 -->
+    <div class="success-screen" id="success-screen">
+      <div class="check">✅</div>
+      <h2>등록 완료!</h2>
+      <p>주차 정보가 성공적으로 등록되었습니다</p>
+      <div class="info-box" id="confirm-info"></div>
+      <button class="btn-again" onclick="resetToReady()">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybRS45LtWiG1LIzPIowjtsXvyCGoCfWkcct-7HQXRAabFIjJfgwq4cNYLh3PA4PQ/exec';
+  const STORAGE_KEY = 'joyfulnow_profile';
+
+  // 날짜
+  document.getElementById('today-date').textContent =
+    new Date().toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
+
+  // 전화번호 자동 하이픈
+  document.getElementById('phone').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '');
+    if (v.length <= 3) this.value = v;
+    else if (v.length <= 7) this.value = v.slice(0,3) + '-' + v.slice(3);
+    else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
+  });
+
+  let selectedCarType = '';
+  let isEditMode = false;   // 프로필 수정 중 여부
+  let savedProfile = null;  // 저장된 프로필
+
+  // ── 초기화: 저장된 프로필 불러오기 ──
+  function init() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) savedProfile = JSON.parse(raw);
+    } catch(e) { savedProfile = null; }
+
+    if (savedProfile) {
+      showReadyMode();
+    } else {
+      showEmptyForm();
+    }
+  }
+
+  // ── 저장된 프로필 있을 때: 배너 + 폼 자동 채움 ──
+  function showReadyMode() {
+    isEditMode = false;
+
+    // 배너 업데이트
+    const banner = document.getElementById('profile-banner');
+    banner.style.display = 'flex';
+    document.getElementById('profile-avatar').textContent = savedProfile.name.charAt(0);
+    document.getElementById('profile-name-label').textContent = savedProfile.name;
+    document.getElementById('profile-sub-label').textContent =
+      `${savedProfile.dept} · ${savedProfile.phone}`;
+
+    // 폼 채우기 (readonly)
+    document.getElementById('name').value = savedProfile.name;
+    document.getElementById('name').readOnly = true;
+    document.getElementById('phone').value = savedProfile.phone;
+    document.getElementById('phone').readOnly = true;
+    document.getElementById('dept').value = savedProfile.dept;
+    document.getElementById('dept').disabled = true;
+
+    // 차량번호는 매번 입력 (매일 달라질 수 있으니 편집 가능하게)
+    document.getElementById('carNum').value = '';
+    document.getElementById('carNum').readOnly = false;
+
+    // 칩 복원
+    if (savedProfile.carType) {
+      document.querySelectorAll('#car-type-chips .chip').forEach(c => {
+        if (c.dataset.value === savedProfile.carType) {
+          c.classList.add('active');
+          selectedCarType = savedProfile.carType;
+        }
+      });
+    }
+
+    // 저장 체크 숨기기
+    document.getElementById('save-check-row').style.display = 'none';
+  }
+
+  // ── 저장 없을 때: 빈 폼 ──
+  function showEmptyForm() {
+    document.getElementById('profile-banner').style.display = 'none';
+    document.getElementById('save-check-row').style.display = 'flex';
+    ['name','carNum','phone'].forEach(id => {
+      document.getElementById(id).readOnly = false;
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('dept').disabled = false;
+    document.getElementById('dept').value = '';
+  }
+
+  // ── 정보 수정 모드 진입 ──
+  function enterEditMode() {
+    isEditMode = true;
+    // 배너 유지하되 폼 편집 가능하게
+    ['name','phone'].forEach(id => {
+      document.getElementById(id).readOnly = false;
+    });
+    document.getElementById('dept').disabled = false;
+    document.getElementById('save-check-row').style.display = 'flex';
+    document.getElementById('save-profile-cb').checked = true;
+    document.querySelector('.btn-edit-profile').textContent = '수정 취소';
+    document.querySelector('.btn-edit-profile').onclick = cancelEdit;
+  }
+
+  function cancelEdit() {
+    isEditMode = false;
+    showReadyMode();
+    document.querySelector('.btn-edit-profile').textContent = '정보 수정';
+    document.querySelector('.btn-edit-profile').onclick = enterEditMode;
+  }
+
+  // ── 칩 토글 ──
+  function toggleChip(el) {
+    if (el.classList.contains('active')) {
+      el.classList.remove('active');
+      selectedCarType = '';
+    } else {
+      document.querySelectorAll('#car-type-chips .chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      selectedCarType = el.dataset.value;
+    }
+  }
+
+  // ── 유효성 검사 ──
+  function validateForm() {
+    let valid = true;
+    ['name','carNum','phone'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+      else { el.classList.remove('error'); }
+    });
+    const dept = document.getElementById('dept');
+    if (!dept.value) { dept.classList.add('error'); valid = false; }
+    else { dept.classList.remove('error'); }
+    return valid;
+  }
+
+  // ── 제출 ──
+  async function submitForm() {
+    if (!validateForm()) {
+      showResult('error', '⚠️ 모든 항목을 입력해주세요.');
+      return;
+    }
+
+    const name   = document.getElementById('name').value.trim();
+    const carNum = document.getElementById('carNum').value.trim();
+    const phone  = document.getElementById('phone').value.trim();
+    const dept   = document.getElementById('dept').value;
+    const saveCb = document.getElementById('save-profile-cb').checked;
+
+    // 내 정보 저장
+    if (saveCb) {
+      const profile = { name, phone, dept, carType: selectedCarType };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      savedProfile = profile;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> 등록 중...';
+
+    const payload = {
+      name,
+      carNum: carNum + (selectedCarType ? ` (${selectedCarType})` : ''),
+      phone,
+      dept,
+    };
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.result === 'success') {
+        showSuccess(payload);
+      } else {
+        throw new Error(json.message || '서버 오류');
+      }
+    } catch (err) {
+      showResult('error', `❌ 등록 실패: ${err.message}<br>잠시 후 다시 시도해주세요.`);
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 주차 등록하기`;
+    }
+  }
+
+  function showResult(type, msg) {
+    const el = document.getElementById('result-msg');
+    el.className = 'result ' + type;
+    el.innerHTML = msg;
+  }
+
+  function showSuccess(data) {
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('profile-banner').style.display = 'none';
+    document.getElementById('success-screen').classList.add('show');
+    const timeStr = new Date().toLocaleTimeString('ko-KR', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('confirm-info').innerHTML = `
+      <div class="info-row"><span>이름</span><span>${data.name}</span></div>
+      <div class="info-row"><span>차량번호</span><span>${data.carNum}</span></div>
+      <div class="info-row"><span>연락처</span><span>${data.phone}</span></div>
+      <div class="info-row"><span>부서</span><span>${data.dept}</span></div>
+      <div class="info-row"><span>등록시간</span><span>${timeStr}</span></div>
+    `;
+  }
+
+  // 완료 후 "확인" → 다시 준비 상태
+  function resetToReady() {
+    document.getElementById('success-screen').classList.remove('show');
+    document.getElementById('form-section').style.display = 'block';
+    document.getElementById('result-msg').className = 'result';
+    document.querySelectorAll('#car-type-chips .chip').forEach(c => c.classList.remove('active'));
+    selectedCarType = '';
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 주차 등록하기`;
+
+    // 프로필 다시 적용
+    savedProfile ? showReadyMode() : showEmptyForm();
+  }
+
+  init();
+</script>
+</body>
+</html>
